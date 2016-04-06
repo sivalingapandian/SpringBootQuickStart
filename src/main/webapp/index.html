@@ -1,0 +1,55 @@
+<html ng-app="itemsApp">
+  <head>
+    <meta charset="utf-8">
+    <title>List of Items</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script>
+      var itemsApp = angular.module('itemsApp', []);
+      itemsApp.controller('ItemsController', function ($scope, $http){
+        $http.get('/expenses').success(function(data) {
+          $scope.items = data;
+        });
+      });
+      itemsApp.controller('NewExpenseController',function($scope,$http){
+        $scope.insertItem = function() {
+
+            $http.get('/expenses/' + $scope.inputeExpenseName + '/expense/' + $scope.inputExpense ).success();
+        };
+      });
+    </script>
+  </head>
+  <body >
+
+    <BR>
+        <div ng-controller="NewExpenseController">
+            <label>Expense Item</label>
+            <input type="text" ng-model="inputeExpenseName"/>
+            <label>Expense</label>
+            <input type="text" ng-model="inputExpense"/>
+            <button ng-click="insertItem()">Create</button>
+        </div>
+
+    <BR>
+
+    <div ng-controller="ItemsController">
+        <h2>List of Items</h2>
+        <table class="pure-table">
+          <thead>
+            <tr>
+              <th>Item Id</th>
+              <th>Expense Name</th>
+              <th>Expense</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in items">
+              <td>{{item.id}}</td>
+              <td>{{item.expenseName}}</td>
+              <td>{{item.expense}}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </body>
+</html>
